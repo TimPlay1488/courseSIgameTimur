@@ -1,5 +1,7 @@
+print("hello world")
 import sys
 import pygame as pg
+import time
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
