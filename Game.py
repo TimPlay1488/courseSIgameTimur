@@ -1,4 +1,3 @@
-print("hello world")
 import sys
 import pygame as pg
 import time
@@ -54,5 +53,13 @@ while True:
     if ball.colliderect(platform):
         BALL_SPEED = -BALL_SPEED
 
+    if BALL_Y < 0:
+        BALL_SPEED = -BALL_SPEED
+
+    if BALL_Y > 750:
+        BALL_SPEED = -BALL_SPEED
+        sys.exit()
+
     pg.display.flip()
+
     clock.tick(FPS)
