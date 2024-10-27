@@ -3,6 +3,8 @@ import pygame as pg
 import time
 import random
 
+pg.init()
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
@@ -10,6 +12,7 @@ SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+def_font = pg.font.Font(pg.font.get_default_font(), 30)
 clock = pg.time.Clock()
 TOP_BORDER = pg.Rect(0,0,SCREEN_WIDTH,1)
 BOTTOM_BORDER = pg.Rect(0,SCREEN_HEIGHT,SCREEN_WIDTH,1)
@@ -58,10 +61,14 @@ while True:
     ball = pg.Rect(BALL_X, BALL_Y, BALL_WIDTH, BALL_HEIGHT)
     pg.draw.rect(screen, BLACK, ball)
 
+    ball_center = (ball.x + ball.width/2, ball.y + ball.height/2)
+    platform_center = (platform.x + platform.width/2, platform.y + platform.height/2)
+    text_surface = def_font.render('Some Text', False, (0,255,0))
+
     if ball.colliderect(platform):
       t = random.Random().random()/2
-      print(t)
-      BALL_DIRECTION = BALL_DIRECTION.reflect(pg.math.Vector2(t,-1).normalize())
+      collision_vector = (ball_center[0] - platform_center[0], ball_center[1] - platform_center[1])
+      BALL_DIRECTION = pg.math.Vector2(collision_vector).normalize()
 
     if ball.colliderect(TOP_BORDER):
       BALL_DIRECTION = BALL_DIRECTION.reflect(pg.math.Vector2(0,1))
@@ -75,13 +82,6 @@ while True:
     if ball.colliderect(RIGHT_BORDER):
       BALL_DIRECTION = BALL_DIRECTION.reflect(pg.math.Vector2(-1,0))        
 
-    # if BALL_Y < 0:
-    #     BALL_SPEED = -BALL_SPEED
-
-    # if BALL_Y > 750:
-    #     BALL_SPEED = -BALL_SPEED
-    #     sys.exit()
-
+    screen.blit(text_surface, (20,20))
     pg.display.flip()
-
     clock.tick(FPS)
