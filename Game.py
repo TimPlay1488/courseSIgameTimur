@@ -10,6 +10,7 @@ BLACK = (0, 0, 0)
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
+count = 0
 
 screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 def_font = pg.font.Font(pg.font.get_default_font(), 30)
@@ -63,12 +64,13 @@ while True:
 
     ball_center = (ball.x + ball.width/2, ball.y + ball.height/2)
     platform_center = (platform.x + platform.width/2, platform.y + platform.height/2)
-    text_surface = def_font.render('Some Text', False, (0,255,0))
+    text_surface = def_font.render(str(count), False, (0,255,0))
 
     if ball.colliderect(platform):
       t = random.Random().random()/2
       collision_vector = (ball_center[0] - platform_center[0], ball_center[1] - platform_center[1])
       BALL_DIRECTION = pg.math.Vector2(collision_vector).normalize()
+      count = count + 1
 
     if ball.colliderect(TOP_BORDER):
       BALL_DIRECTION = BALL_DIRECTION.reflect(pg.math.Vector2(0,1))
