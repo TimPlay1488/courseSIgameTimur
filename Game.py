@@ -6,8 +6,8 @@ import random
 
 pg.init()
 
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
+WHITE = (0, 0, 0)
+BLACK = (255, 255, 255)
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
@@ -25,8 +25,7 @@ PLATFORM_HEIGHT = 30
 BALL_WIDTH = 30
 BALL_HEIGHT = 30
 
-
-def game(screen, clock):
+def game(screen, clock, assets):
 
   
   COUNTER = 0
@@ -61,13 +60,26 @@ def game(screen, clock):
       BALL_Y += speed_vector.y
       BALL_X += speed_vector.x
       
-      screen.fill(WHITE)
+      # screen.fill(WHITE)
+      screen.blit(assets['background'],(0,0))
 
-      platform = pg.Rect(PLATFORM_X, PLATFORM_Y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
-      pg.draw.rect(screen, BLACK, platform)
 
-      ball = pg.Rect(BALL_X, BALL_Y, BALL_WIDTH, BALL_HEIGHT)
-      pg.draw.rect(screen, BLACK, ball)
+      platform = assets['panel'].get_rect()
+      platform.x = PLATFORM_X
+      platform.y = PLATFORM_Y
+      #platform = pg.Rect(PLATFORM_X, PLATFORM_Y, PLATFORM_WIDTH, PLATFORM_HEIGHT)
+      #pg.draw.rect(screen, BLACK, platform)
+      screen.blit(assets['panel'], platform)
+
+
+      ball = assets['ball'].get_rect()
+      ball.x = BALL_X
+      ball.y = BALL_Y
+
+      screen.blit(assets['ball'], ball)
+
+      # ball = pg.Rect(BALL_X, BALL_Y, BALL_WIDTH, BALL_HEIGHT)
+      # pg.draw.rect(screen, BLACK, ball)
 
       ball_center = (ball.x + ball.width/2, ball.y + ball.height/2)
       platform_center = (platform.x + platform.width/2, platform.y + platform.height/2)
@@ -89,7 +101,7 @@ def game(screen, clock):
         BALL_DIRECTION = BALL_DIRECTION.reflect(pg.math.Vector2(1,0))
 
       if ball.colliderect(RIGHT_BORDER):
-        BALL_DIRECTION = BALL_DIRECTION.reflect(pg.math.Vector2(-1,0))        
+        BALL_DIRECTION = BALL_DIRECTION.reflect(pg.math.Vector2(-1,0))  
 
       screen.blit(text_surface, (20,20))
       pg.display.flip()
@@ -97,9 +109,15 @@ def game(screen, clock):
 
 if __name__ == '__main__':
   screen_out = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+  assets = {
+     'ball': pg.transform.scale(pg.image.load('ball.png').convert_alpha(), (BALL_WIDTH, BALL_HEIGHT)),
+     'background': pg.transform.scale(pg.image.load('background.png').convert_alpha(), (SCREEN_WIDTH, SCREEN_HEIGHT)),
+     'panel': pg.transform.scale(pg.image.load('panel.png').convert_alpha(), (PLATFORM_WIDTH, PLATFORM_HEIGHT)),
+  }
+
   clock_out = pg.time.Clock()
   while True:
-    game(screen_out, clock_out)
+    game(screen_out, clock_out, assets)
     finish_text = def_font.render('Game Over', False, (0, 255, 0))
     screen_out.blit(finish_text, (SCREEN_WIDTH/2-30, SCREEN_HEIGHT/2))
     pg.display.flip()
