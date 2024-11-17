@@ -2,7 +2,9 @@ import sys
 import pygame as pg
 import time
 import random
+import pygame.mixer as mixer
 
+mixer.init()
 
 pg.init()
 
@@ -24,9 +26,11 @@ PLATFORM_WIDTH = 200
 PLATFORM_HEIGHT = 30
 BALL_WIDTH = 30
 BALL_HEIGHT = 30
+sound_obj = pg.mixer.Sound("est-probitie.mp3")
+sound_over = pg.mixer.Sound("ne-probil.mp3")
+sound_background = pg.mixer.Sound("kahoot-lobby-music_v7NLkTEl.ogg")
 
 def game(screen, clock, assets):
-
   
   COUNTER = 0
 
@@ -40,6 +44,8 @@ def game(screen, clock, assets):
   BALL_DIRECTION = pg.math.Vector2(1,1).normalize()
 
   FPS = 120
+
+  sound_background.play(1)
 
   while True:
       for i in pg.event.get():
@@ -86,6 +92,7 @@ def game(screen, clock, assets):
       text_surface = def_font.render(str(COUNTER), False, (0,255,0))
 
       if ball.colliderect(platform):
+        sound_obj.play()
         t = random.Random().random()/2
         collision_vector = (ball_center[0] - platform_center[0], ball_center[1] - platform_center[1])
         BALL_DIRECTION = pg.math.Vector2(collision_vector).normalize()
@@ -121,6 +128,7 @@ if __name__ == '__main__':
     finish_text = def_font.render('Game Over', False, (0, 255, 0))
     screen_out.blit(finish_text, (SCREEN_WIDTH/2-30, SCREEN_HEIGHT/2))
     pg.display.flip()
+    sound_over.play()
     while True:
       for event in pg.event.get():
         if event.type == pg.QUIT:
